@@ -1,4 +1,5 @@
 //axios import buraya gelecek
+import axios from "axios";
 
 var benimIP;
 
@@ -18,7 +19,7 @@ async function ipAdresimiAl(){
 	.then(function (a) {
 		benimIP=a
 	});
-}				
+}		
 // ------------ değiştirmeyin --------------
 
 
@@ -30,7 +31,6 @@ async function ipAdresimiAl(){
 	NOT: Bilgisayarın IP adresini öğrenmek için: https://apis.ergineer.com/ipadresim 
 	ADIM 5'e gelene kadar fonksiyonunuzu test etmek için ip nizi URL'ye manuel olarak ekleyebilirsiniz.
 */
-
 /*
 	ADIM 2: Geri döndürülen verileri inceleyin, bu sizin ip bilgileriniz! Bileşen fonksiyonunuzu geliştirmek içindeki bu veri yapısını
 	iyice anlamanız gerekmektedir.
@@ -70,3 +70,65 @@ async function ipAdresimiAl(){
 
 
 //kodlar buraya gelecek
+
+const ipBilgisi = (ipObject) => {
+	let div = document.createElement("div");
+	div.classList.add("card");
+  
+	let bayrak = document.createElement("img");
+	bayrak.setAttribute("src", ipObject.ülkebayrağı);
+	div.appendChild(bayrak);
+  
+	let cardInfo = document.createElement("div");
+	cardInfo.classList.add("card-info");
+	div.appendChild(cardInfo);
+  
+	let h3 = document.createElement("h3");
+	h3.classList.add("ip");
+	h3.textContent = ipObject.sorgu;
+	cardInfo.appendChild(h3);
+  
+	let ulke = document.createElement("p");
+	ulke.classList.add("ulke");
+	ulke.textContent = `${ipObject.ülke} (${ipObject.ülkeKodu})`;
+	cardInfo.appendChild(ulke);
+  
+	let enlemBilgisi = document.createElement("p");
+	enlemBilgisi.textContent = `Enlem: ${ipObject.enlem} Boylam: ${ipObject.boylam}`;
+	cardInfo.appendChild(enlemBilgisi);
+  
+	let sehirBilgisi = document.createElement("p");
+	sehirBilgisi.textContent = `Şehir: ${ipObject.şehir}`;
+	cardInfo.appendChild(sehirBilgisi);
+  
+	let saatBilgisi = document.createElement("p");
+	saatBilgisi.textContent = `Saat Dilimi: ${ipObject.saatdilimi}`;
+	cardInfo.appendChild(saatBilgisi);
+  
+	let paraBirimi = document.createElement("p");
+	paraBirimi.textContent = `Para Birimi: ${ipObject.parabirimi}`;
+	cardInfo.appendChild(paraBirimi);
+  
+	let ispBilgisi = document.createElement("p");
+	ispBilgisi.textContent = `ISP: ${ipObject.isp}`;
+	cardInfo.appendChild(ispBilgisi);
+  
+	return div;
+  };
+  
+  let cards = document.querySelector(".cards");
+  
+  async function getData() {
+	await ipAdresimiAl();
+  
+	axios
+	  .get("https://apis.ergineer.com/ipgeoapi/" + benimIP)
+	  .then(function (response) {
+		return response.data;
+	  })
+	  .then((object) => {
+		cards.appendChild(ipBilgisi(object));
+	  });
+  }
+  
+  getData();
